@@ -1,0 +1,21 @@
+// Prisma schema file — the single source of truth for our data model.
+// Docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  // Tells Prisma to generate a JS/TS client into node_modules/@prisma/client.
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Our first model. We'll extend this in Feature 4 (auth) by adding passwordHash, role, etc.
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
