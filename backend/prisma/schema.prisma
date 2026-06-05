@@ -2,7 +2,6 @@
 // Docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  // Tells Prisma to generate a JS/TS client into node_modules/@prisma/client.
   provider = "prisma-client-js"
 }
 
@@ -11,11 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Our first model. We'll extend this in Feature 4 (auth) by adding passwordHash, role, etc.
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role     @default(CUSTOMER)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+enum Role {
+  CUSTOMER
+  PROVIDER
 }

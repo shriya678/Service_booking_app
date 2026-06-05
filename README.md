@@ -8,7 +8,7 @@ A learning project: payment-enabled service booking app where users book service
 | Layer | Tech |
 |---|---|
 | Backend | Node.js + Express |
-| Frontend | React (Vite) + Tailwind *(coming soon)* |
+| Frontend | React 18 + Vite + Tailwind 4 |
 | Database | PostgreSQL 16 + Prisma 6 |
 | Payments | Stripe (test mode) *(coming soon)* |
 | Notifications | Email first, SMS later *(coming soon)* |
@@ -16,10 +16,10 @@ A learning project: payment-enabled service booking app where users book service
 ## Project structure
 
 ```
-service-booking-app/
+Service_booking_app/
 ├── docker-compose.yml  # Postgres for local dev
 ├── backend/            # Express API + Prisma
-└── frontend/           # React app (coming soon)
+└── frontend/           # React + Vite + Tailwind
 ```
 
 ## Prerequisites
@@ -76,6 +76,20 @@ curl http://localhost:4000/api/users/count
 # → {"count":0}
 ```
 
+### 5. Install + run the frontend
+
+In a new terminal:
+
+```bash
+cd frontend
+cp .env.example .env       # PowerShell: Copy-Item .env.example .env
+npm install
+npm run dev
+```
+
+Vite serves at http://localhost:5173. Open it in a browser — you should
+see the user count from the backend.
+
 ## Useful scripts (backend)
 
 | Command | What it does |
@@ -87,10 +101,14 @@ curl http://localhost:4000/api/users/count
 
 ## API routes
 
-| Method | Path | Description |
-|---|---|---|
-| GET | `/api/health` | Liveness check — returns server status |
-| GET | `/api/users/count` | Returns the number of users in the DB |
+| Method | Path | Auth | Description |
+|---|---|---|---|
+| GET | `/api/health` | — | Liveness check — returns server status |
+| GET | `/api/users/count` | — | Returns the number of users in the DB |
+| POST | `/api/auth/signup` | — | Create account: `{ email, password, name }`. Sets session cookie. |
+| POST | `/api/auth/login` | — | Sign in: `{ email, password }`. Sets session cookie. |
+| POST | `/api/auth/logout` | — | Clears session cookie. |
+| GET | `/api/auth/me` | required | Returns the current user. |
 
 ## Environment variables (backend)
 
@@ -101,12 +119,23 @@ See `backend/.env.example`.
 | `PORT` | 4000 | HTTP port |
 | `NODE_ENV` | development | Runtime mode |
 | `DATABASE_URL` | *(see .env.example)* | Postgres connection string |
+| `FRONTEND_URL` | http://localhost:5173 | Origin allowed by CORS |
+| `JWT_SECRET` | *(required)* | Secret used to sign session JWTs |
+| `JWT_EXPIRES_IN` | 7d | Session lifetime |
+
+## Environment variables (frontend)
+
+See `frontend/.env.example`. Only vars prefixed with `VITE_` are exposed to the browser.
+
+| Var | Default | Purpose |
+|---|---|---|
+| `VITE_API_URL` | http://localhost:4000 | Base URL of the backend API |
 
 ## Roadmap
 
 - [x] Feature 1 — Backend skeleton (`/api/health`)
 - [x] Feature 2 — Database + Prisma
-- [ ] Feature 3 — Frontend skeleton
+- [x] Feature 3 — Frontend skeleton
 - [ ] Feature 4 — Signup / login (JWT)
 - [ ] Feature 5 — Provider profiles
 - [ ] Feature 6 — Services + slots

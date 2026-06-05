@@ -1,0 +1,4 @@
+/* Tailwind v4 is loaded with a single @import.
+   In v3 you used three @tailwind directives; v4 simplifies it. */
+
+@import "tailwindcss";
