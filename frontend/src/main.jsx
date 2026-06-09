@@ -1,18 +1,24 @@
 // Entry point of the React app.
-// 1. Find the <div id="root"></div> we put in index.html.
-// 2. Create a React root attached to it.
-// 3. Render our top-level <App /> component inside.
-// 4. Wrap in <StrictMode> — a dev-only safety net that highlights bad patterns.
+// We wrap <App /> in two providers:
+//   <BrowserRouter>  — gives all components access to React Router's APIs
+//                      (Routes, Link, useNavigate, etc.)
+//   <AuthProvider>   — gives all components access to auth state via useAuth()
 
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
 import App from './App.jsx';
-import './styles/index.css'; // side-effect import: loads Tailwind into the bundle
+import './styles/index.css';
 
 const rootElement = document.getElementById('root');
 
 createRoot(rootElement).render(
   <StrictMode>
-    <App />
+    <BrowserRouter>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </BrowserRouter>
   </StrictMode>,
 );
