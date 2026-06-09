@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 import healthRoutes from './routes/health.routes.js';
 import usersRoutes from './routes/users.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import providersRoutes from './routes/providers.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { env } from './config/env.js';
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use('/api/health', healthRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/providers', providersRoutes);
 
 // Error handler must be LAST — Express runs middleware in order,
 // so this only catches errors after routes have had a chance.

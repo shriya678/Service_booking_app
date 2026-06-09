@@ -109,6 +109,10 @@ see the user count from the backend.
 | POST | `/api/auth/login` | — | Sign in: `{ email, password }`. Sets session cookie. |
 | POST | `/api/auth/logout` | — | Clears session cookie. |
 | GET | `/api/auth/me` | required | Returns the current user. |
+| GET | `/api/providers` | — | List all providers (public). |
+| GET | `/api/providers/:id` | — | Get one provider with owner info (public). |
+| POST | `/api/providers` | role=PROVIDER | Create my provider profile. |
+| PATCH | `/api/providers/me` | role=PROVIDER | Update my provider profile. |
 
 ## Environment variables (backend)
 
@@ -136,8 +140,9 @@ See `frontend/.env.example`. Only vars prefixed with `VITE_` are exposed to the 
 - [x] Feature 1 — Backend skeleton (`/api/health`)
 - [x] Feature 2 — Database + Prisma
 - [x] Feature 3 — Frontend skeleton
-- [ ] Feature 4 — Signup / login (JWT)
-- [ ] Feature 5 — Provider profiles
+- [x] Feature 4 — Signup / login (JWT) — backend + frontend
+- [x] Feature 5 — Provider profiles (backend)
+- [ ] Feature 5b — Provider profiles (frontend)
 - [ ] Feature 6 — Services + slots
 - [ ] Feature 7 — Bookings
 - [ ] Feature 8 — Stripe payments
