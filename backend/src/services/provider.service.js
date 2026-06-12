@@ -32,6 +32,15 @@ export async function getProviderById(id) {
   return provider;
 }
 
+export async function getProviderByUserId(userId) {
+  const provider = await prisma.provider.findUnique({
+    where: { userId },
+    include: PROVIDER_INCLUDE,
+  });
+  if (!provider) throw httpError('Provider profile not found', 404);
+  return provider;
+}
+
 export async function createProviderForUser(userId, data) {
   const existing = await prisma.provider.findUnique({ where: { userId } });
   if (existing) throw httpError('Provider profile already exists', 409);

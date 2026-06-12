@@ -1,6 +1,7 @@
-// Logged-in landing page. Shows user info and a logout button.
+// Logged-in landing page. Shows user info, nav links, and a logout button.
 
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getUserCount } from '../api/client';
 
@@ -18,7 +19,17 @@ export default function HomePage() {
     <div className="min-h-screen bg-slate-50">
       <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-slate-800">Service Booking App</h1>
-        <div className="flex items-center gap-4">
+
+        <nav className="flex items-center gap-6">
+          <Link to="/providers" className="text-sm text-slate-700 hover:text-blue-600">
+            Browse providers
+          </Link>
+          {/* Show "My provider profile" only to PROVIDER users */}
+          {user.role === 'PROVIDER' && (
+            <Link to="/my-provider" className="text-sm text-slate-700 hover:text-blue-600">
+              My provider profile
+            </Link>
+          )}
           <span className="text-slate-600 text-sm">{user.name}</span>
           <button
             onClick={logout}
@@ -26,7 +37,7 @@ export default function HomePage() {
           >
             Logout
           </button>
-        </div>
+        </nav>
       </header>
 
       <main className="p-8">

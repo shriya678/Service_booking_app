@@ -50,3 +50,30 @@ export function logout() {
 export function getMe() {
   return request('/api/auth/me');
 }
+
+// Providers
+export function listProviders() {
+  return request('/api/providers');
+}
+
+export function getProvider(id) {
+  return request(`/api/providers/${id}`);
+}
+
+export function getMyProvider() {
+  return request('/api/providers/me');
+}
+
+export function createProvider(data) {
+  return request('/api/providers', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateMyProvider(data) {
+  return request('/api/providers/me', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
