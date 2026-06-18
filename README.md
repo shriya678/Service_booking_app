@@ -114,6 +114,9 @@ see the user count from the backend.
 | GET | `/api/providers/:id` | — | Get one provider with owner info (public). |
 | POST | `/api/providers` | role=PROVIDER | Create my provider profile. |
 | PATCH | `/api/providers/me` | role=PROVIDER | Update my provider profile. |
+| POST | `/api/services` | role=PROVIDER | Create a service under my provider. |
+| PATCH | `/api/services/:id` | role=PROVIDER | Update a service I own. |
+| DELETE | `/api/services/:id` | role=PROVIDER | Delete a service I own. |
 
 ## Environment variables (backend)
 
@@ -143,6 +146,7 @@ See `frontend/.env.example`. Only vars prefixed with `VITE_` are exposed to the 
 - [x] Feature 3 — Frontend skeleton
 - [x] Feature 4 — Signup / login (JWT) — backend + frontend
 - [x] Feature 5 — Provider profiles (backend + frontend)
+- [x] Feature 6 — Services (backend)
 - [ ] Feature 6 — Services + slots
 - [ ] Feature 7 — Bookings
 - [ ] Feature 8 — Stripe payments
