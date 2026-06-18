@@ -1,31 +1,40 @@
-// Create-or-edit form for the logged-in provider's profile.
-// On mount, fetch existing profile:
-//   - 200 → fill the form, mode = "edit" (submit will PATCH)
-//   - 404 → leave blank,  mode = "create" (submit will POST)
-
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getMyProvider, createProvider, updateMyProvider } from '../api/client';
+import { ExternalLink } from 'lucide-react';
+import { motion } from 'motion/react';
+import {
+  getMyProvider,
+  createProvider,
+  updateMyProvider,
+} from '../api/client';
+import { Header } from '../components/Header';
+import { Input } from '../components/ui/Input';
+import { Textarea } from '../components/ui/Textarea';
+import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
+import { Spinner } from '../components/ui/Spinner';
+import { useToast } from '../context/ToastContext';
+
+const easeOut = [0.22, 1, 0.36, 1];
 
 export default function MyProviderPage() {
+  const toast = useToast();
+
   const [loading, setLoading] = useState(true);
-  const [existing, setExisting] = useState(null); // null = create mode
+  const [existing, setExisting] = useState(null);
 
   const [businessName, setBusinessName] = useState('');
   const [description, setDescription] = useState('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
 
-  const [error, setError] = useState(null);
   const [fieldErrors, setFieldErrors] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const [savedMessage, setSavedMessage] = useState(null);
 
   useEffect(() => {
     getMyProvider()
       .then((data) => {
         setExisting(data.provider);
-        // Pre-fill the form with the existing values.
         setBusinessName(data.provider.businessName);
         setDescription(data.provider.description || '');
         setAddress(data.provider.address);
@@ -33,20 +42,19 @@ export default function MyProviderPage() {
       })
       .catch((err) => {
         if (err.status === 404) {
-          // No profile yet — that's fine, form stays empty (create mode).
           setExisting(null);
         } else {
-          setError(err.message);
+          toast.error(err.message);
         }
       })
       .finally(() => setLoading(false));
+    // toast is referentially stable from context — safe to omit from deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError(null);
     setFieldErrors(null);
-    setSavedMessage(null);
     setSubmitting(true);
 
     const payload = { businessName, description, address, city };
@@ -56,10 +64,10 @@ export default function MyProviderPage() {
         ? await updateMyProvider(payload)
         : await createProvider(payload);
       setExisting(result.provider);
-      setSavedMessage(existing ? 'Profile updated.' : 'Profile created.');
+      toast.success(existing ? 'Profile updated.' : 'Profile created.');
     } catch (err) {
-      setError(err.message);
       setFieldErrors(err.details || null);
+      if (!err.details) toast.error(err.message);
     } finally {
       setSubmitting(false);
     }
@@ -67,109 +75,95 @@ export default function MyProviderPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-slate-500">
-        Loading…
+      <div className="min-h-screen bg-slate-50">
+        <Header />
+        <div className="flex justify-center py-16">
+          <Spinner />
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-800">Service Booking App</h1>
-        <Link to="/" className="text-sm text-blue-600 hover:underline">Home</Link>
-      </header>
+      <Header />
 
-      <main className="p-8 max-w-2xl mx-auto">
-        <h2 className="text-2xl font-bold text-slate-800 mb-6">
-          {existing ? 'Edit your provider profile' : 'Create your provider profile'}
-        </h2>
-
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 space-y-4">
-          <label className="block">
-            <span className="text-sm text-slate-600">Business name</span>
-            <input
-              type="text"
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
-              required
-              className="mt-1 w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {fieldErrors?.businessName && (
-              <span className="text-xs text-red-600">{fieldErrors.businessName[0]}</span>
-            )}
-          </label>
-
-          <label className="block">
-            <span className="text-sm text-slate-600">Description</span>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={4}
-              className="mt-1 w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {fieldErrors?.description && (
-              <span className="text-xs text-red-600">{fieldErrors.description[0]}</span>
-            )}
-          </label>
-
-          <label className="block">
-            <span className="text-sm text-slate-600">Address</span>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-              className="mt-1 w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {fieldErrors?.address && (
-              <span className="text-xs text-red-600">{fieldErrors.address[0]}</span>
-            )}
-          </label>
-
-          <label className="block">
-            <span className="text-sm text-slate-600">City</span>
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              required
-              className="mt-1 w-full border border-slate-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            {fieldErrors?.city && (
-              <span className="text-xs text-red-600">{fieldErrors.city[0]}</span>
-            )}
-          </label>
-
-          {error && !fieldErrors && (
-            <p className="text-red-600 text-sm" role="alert">{error}</p>
-          )}
-          {savedMessage && (
-            <p className="text-green-600 text-sm">{savedMessage}</p>
-          )}
-
-          <button
-            type="submit"
-            disabled={submitting}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {submitting
-              ? 'Saving…'
-              : existing
-                ? 'Update profile'
-                : 'Create profile'}
-          </button>
-
+      <motion.main
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: easeOut }}
+        className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12"
+      >
+        <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900">
+              {existing ? 'Edit your profile' : 'Create your provider profile'}
+            </h1>
+            <p className="text-slate-600 mt-1">
+              {existing
+                ? 'Changes save when you click Update.'
+                : 'Tell customers about your business.'}
+            </p>
+          </div>
           {existing && (
             <Link
               to={`/providers/${existing.id}`}
-              className="ml-3 text-sm text-blue-600 hover:underline"
+              className="inline-flex items-center gap-1 text-sm font-medium text-violet-600 hover:text-violet-700 group"
             >
-              View public page →
+              View public page
+              <ExternalLink className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           )}
-        </form>
-      </main>
+        </div>
+
+        <Card>
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
+            <Input
+              label="Business name"
+              value={businessName}
+              onChange={(e) => setBusinessName(e.target.value)}
+              error={fieldErrors?.businessName?.[0]}
+              placeholder="e.g. Alice's Salon"
+              required
+            />
+            <Textarea
+              label="Description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              error={fieldErrors?.description?.[0]}
+              hint="Optional. Tell customers what you offer."
+              placeholder="We offer haircuts, manicures, and..."
+              rows={4}
+            />
+            <Input
+              label="Address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              error={fieldErrors?.address?.[0]}
+              placeholder="Street, building, suite"
+              required
+            />
+            <Input
+              label="City"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              error={fieldErrors?.city?.[0]}
+              placeholder="e.g. Bangalore"
+              required
+            />
+
+            <div className="flex justify-end pt-2">
+              <Button type="submit" loading={submitting}>
+                {submitting
+                  ? 'Saving…'
+                  : existing
+                    ? 'Update profile'
+                    : 'Create profile'}
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </motion.main>
     </div>
   );
 }

@@ -1,7 +1,12 @@
 // Top-level router. Each <Route> maps a URL to a page component.
-// Visiting an unknown URL redirects to "/".
+//   /           → public landing page
+//   /dashboard  → protected home for logged-in users
+//   /providers  → public list and detail
+//   /my-provider → providers-only edit form
+//   /login, /signup → public
 
 import { Routes, Route, Navigate } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
@@ -14,15 +19,14 @@ import ProviderOnlyRoute from './components/ProviderOnlyRoute';
 function App() {
   return (
     <Routes>
-      {/* Public auth pages */}
+      <Route path="/" element={<LandingPage />} />
+
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
 
-      {/* Public provider browsing */}
       <Route path="/providers" element={<ProvidersPage />} />
       <Route path="/providers/:id" element={<ProviderDetailPage />} />
 
-      {/* Provider-only: edit own profile */}
       <Route
         path="/my-provider"
         element={
@@ -32,9 +36,8 @@ function App() {
         }
       />
 
-      {/* Home (logged-in users) */}
       <Route
-        path="/"
+        path="/dashboard"
         element={
           <ProtectedRoute>
             <HomePage />
@@ -42,7 +45,6 @@ function App() {
         }
       />
 
-      {/* Catch-all: unknown URL → home */}
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -1,4 +1,7 @@
-/* Tailwind v4 is loaded with a single @import.
-   In v3 you used three @tailwind directives; v4 simplifies it. */
-
 @import "tailwindcss";
+
+html, body {
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
