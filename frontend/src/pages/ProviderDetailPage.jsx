@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, MapPin, Mail, Calendar } from 'lucide-react';
+import { ArrowLeft, MapPin, Mail, Calendar, Clock, Banknote } from 'lucide-react';
 import { motion } from 'motion/react';
 import { getProvider } from '../api/client';
 import { Header } from '../components/Header';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Skeleton } from '../components/ui/Skeleton';
+import { formatPrice, formatDuration } from '../utils/format';
 
 const easeOut = [0.22, 1, 0.36, 1];
 
@@ -72,6 +73,10 @@ export default function ProviderDetailPage() {
                   </div>
                 )}
 
+                {provider.services && provider.services.length > 0 && (
+                  <ServicesSection services={provider.services} />
+                )}
+
                 <div className="border-t border-slate-200 mt-6 pt-6 space-y-3">
                   <DetailRow icon={MapPin} label="Address">
                     {provider.address}, {provider.city}
@@ -105,7 +110,7 @@ export default function ProviderDetailPage() {
                   </motion.div>
                   <h3 className="font-semibold text-slate-900">Book an appointment</h3>
                   <p className="text-sm text-slate-500 mt-1">
-                    Services and slots are coming soon.
+                    Slots and booking are coming soon.
                   </p>
                   <Button disabled className="w-full mt-4">
                     Book now (coming soon)
@@ -116,6 +121,48 @@ export default function ProviderDetailPage() {
           </div>
         )}
       </main>
+    </div>
+  );
+}
+
+function ServicesSection({ services }) {
+  return (
+    <div className="border-t border-slate-200 mt-6 pt-6">
+      <h2 className="text-sm font-semibold text-slate-900 mb-3">
+        Services &amp; pricing
+      </h2>
+      <div className="space-y-2">
+        {services.map((s, i) => (
+          <motion.div
+            key={s.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: 0.1 + i * 0.05, ease: easeOut }}
+            className="flex items-center gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-violet-200 hover:bg-violet-50/30 transition-colors"
+          >
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-slate-900 truncate">{s.name}</h3>
+              {s.description && (
+                <p className="text-sm text-slate-600 mt-0.5 line-clamp-2">
+                  {s.description}
+                </p>
+              )}
+              <div className="flex items-center gap-3 mt-2 text-xs text-slate-500">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  {formatDuration(s.durationMinutes)}
+                </span>
+              </div>
+            </div>
+            <div className="text-right shrink-0">
+              <div className="flex items-center gap-1 justify-end font-bold text-slate-900">
+                <Banknote className="w-4 h-4 text-slate-400" />
+                {formatPrice(s.priceCents)}
+              </div>
+            </div>
+          </motion.div>
+        ))}
+      </div>
     </div>
   );
 }

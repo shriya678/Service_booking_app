@@ -30,7 +30,10 @@ export function Header() {
             <NavItem to="/dashboard">Dashboard</NavItem>
             <NavItem to="/providers">Browse</NavItem>
             {user.role === 'PROVIDER' && (
-              <NavItem to="/my-provider">My profile</NavItem>
+              <>
+                <NavItem to="/my-provider">Profile</NavItem>
+                <NavItem to="/my-services">Services</NavItem>
+              </>
             )}
             <div className="ml-2 flex items-center gap-2 pl-3 border-l border-slate-200">
               <span className="hidden sm:block text-sm text-slate-600">

@@ -146,7 +146,7 @@ See `frontend/.env.example`. Only vars prefixed with `VITE_` are exposed to the 
 - [x] Feature 3 — Frontend skeleton
 - [x] Feature 4 — Signup / login (JWT) — backend + frontend
 - [x] Feature 5 — Provider profiles (backend + frontend)
-- [x] Feature 6 — Services (backend)
+- [x] Feature 6 — Services (backend + frontend)
 - [ ] Feature 6 — Services + slots
 - [ ] Feature 7 — Bookings
 - [ ] Feature 8 — Stripe payments

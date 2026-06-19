@@ -1,7 +1,13 @@
 // Dashboard at /dashboard. Animated greeting + staggered action cards.
 
 import { Link } from 'react-router-dom';
-import { Calendar, Building2, ArrowRight, User as UserIcon } from 'lucide-react';
+import {
+  Calendar,
+  Building2,
+  ArrowRight,
+  User as UserIcon,
+  Sparkles,
+} from 'lucide-react';
 import { motion } from 'motion/react';
 import { Header } from '../components/Header';
 import { useAuth } from '../context/AuthContext';
@@ -12,7 +18,7 @@ const easeOut = [0.22, 1, 0.36, 1];
 
 const container = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 };
 const item = {
   hidden: { opacity: 0, y: 24 },
@@ -57,7 +63,11 @@ export default function HomePage() {
           </Badge>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 gap-4">
+        <div
+          className={`grid gap-4 sm:grid-cols-2 ${
+            isProvider ? 'lg:grid-cols-3' : ''
+          }`}
+        >
           <motion.div variants={item}>
             <ActionCard
               icon={Calendar}
@@ -70,36 +80,54 @@ export default function HomePage() {
             />
           </motion.div>
 
-          <motion.div variants={item}>
-            {isProvider ? (
-              <ActionCard
-                icon={Building2}
-                iconBg="bg-fuchsia-100"
-                iconColor="text-fuchsia-600"
-                title="Your provider profile"
-                description="Keep your business details up to date."
-                linkTo="/my-provider"
-                linkLabel="Manage profile"
-              />
-            ) : (
+          {isProvider ? (
+            <>
+              <motion.div variants={item}>
+                <ActionCard
+                  icon={Building2}
+                  iconBg="bg-fuchsia-100"
+                  iconColor="text-fuchsia-600"
+                  title="Your profile"
+                  description="Business details customers see."
+                  linkTo="/my-provider"
+                  linkLabel="Manage profile"
+                />
+              </motion.div>
+              <motion.div variants={item}>
+                <ActionCard
+                  icon={Sparkles}
+                  iconBg="bg-pink-100"
+                  iconColor="text-pink-600"
+                  title="Your services"
+                  description="Add and price what you offer."
+                  linkTo="/my-services"
+                  linkLabel="Manage services"
+                />
+              </motion.div>
+            </>
+          ) : (
+            <motion.div variants={item}>
               <Card className="p-6">
                 <div className="flex items-start gap-4">
                   <div className="p-3 bg-amber-100 rounded-xl">
                     <UserIcon className="w-5 h-5 text-amber-600" />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-semibold text-slate-900">Become a provider</h3>
+                    <h3 className="font-semibold text-slate-900">
+                      Become a provider
+                    </h3>
                     <p className="text-sm text-slate-500 mt-1">
                       Offer your services to customers in your area.
                     </p>
                     <p className="text-xs text-slate-400 mt-3">
-                      (For now, change your role to PROVIDER in Prisma Studio, then log back in.)
+                      (For now, change your role to PROVIDER in Prisma Studio,
+                      then log back in.)
                     </p>
                   </div>
                 </div>
               </Card>
-            )}
-          </motion.div>
+            </motion.div>
+          )}
         </div>
       </motion.main>
     </div>

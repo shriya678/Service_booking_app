@@ -1,9 +1,4 @@
 // Top-level router. Each <Route> maps a URL to a page component.
-//   /           → public landing page
-//   /dashboard  → protected home for logged-in users
-//   /providers  → public list and detail
-//   /my-provider → providers-only edit form
-//   /login, /signup → public
 
 import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
@@ -13,6 +8,7 @@ import SignupPage from './pages/SignupPage';
 import ProvidersPage from './pages/ProvidersPage';
 import ProviderDetailPage from './pages/ProviderDetailPage';
 import MyProviderPage from './pages/MyProviderPage';
+import MyServicesPage from './pages/MyServicesPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProviderOnlyRoute from './components/ProviderOnlyRoute';
 
@@ -32,6 +28,14 @@ function App() {
         element={
           <ProviderOnlyRoute>
             <MyProviderPage />
+          </ProviderOnlyRoute>
+        }
+      />
+      <Route
+        path="/my-services"
+        element={
+          <ProviderOnlyRoute>
+            <MyServicesPage />
           </ProviderOnlyRoute>
         }
       />

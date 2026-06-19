@@ -77,3 +77,22 @@ export function updateMyProvider(data) {
     body: JSON.stringify(data),
   });
 }
+
+// Services
+export function createService(data) {
+  return request('/api/services', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export function updateService(id, data) {
+  return request(`/api/services/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export function deleteService(id) {
+  return request(`/api/services/${id}`, { method: 'DELETE' });
+}
