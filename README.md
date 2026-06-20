@@ -117,6 +117,9 @@ see the user count from the backend.
 | POST | `/api/services` | role=PROVIDER | Create a service under my provider. |
 | PATCH | `/api/services/:id` | role=PROVIDER | Update a service I own. |
 | DELETE | `/api/services/:id` | role=PROVIDER | Delete a service I own. |
+| GET | `/api/services/:serviceId/slots` | — | Future slots for a service. |
+| POST | `/api/services/:serviceId/slots` | role=PROVIDER | Create a slot under a service I own. |
+| DELETE | `/api/slots/:id` | role=PROVIDER | Delete a slot I own (only if not booked). |
 
 ## Environment variables (backend)
 
@@ -147,6 +150,7 @@ See `frontend/.env.example`. Only vars prefixed with `VITE_` are exposed to the 
 - [x] Feature 4 — Signup / login (JWT) — backend + frontend
 - [x] Feature 5 — Provider profiles (backend + frontend)
 - [x] Feature 6 — Services (backend + frontend)
+- [x] Feature 7 — Slots (backend)
 - [ ] Feature 6 — Services + slots
 - [ ] Feature 7 — Bookings
 - [ ] Feature 8 — Stripe payments

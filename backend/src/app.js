@@ -10,6 +10,7 @@ import usersRoutes from './routes/users.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import providersRoutes from './routes/providers.routes.js';
 import servicesRoutes from './routes/services.routes.js';
+import slotsRoutes from './routes/slots.routes.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { env } from './config/env.js';
 
@@ -31,6 +32,9 @@ app.use('/api/users', usersRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/providers', providersRoutes);
 app.use('/api/services', servicesRoutes);
+// Slot routes use mixed prefixes (/api/services/:id/slots and /api/slots/:id),
+// so mount at the /api root.
+app.use('/api', slotsRoutes);
 
 // Error handler must be LAST — Express runs middleware in order,
 // so this only catches errors after routes have had a chance.
